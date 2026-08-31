@@ -26,10 +26,6 @@ function createPlayer() {
 	});
 }
 
-const playerOne = createPlayer();
-const playerTwo = createPlayer();
-
-
 /* ************************************************************************** */
 /*                                    TEST                                    */
 /* ************************************************************************** */
@@ -41,6 +37,9 @@ function displayPlayer(player) {
 	console.log(`lose: ${player.getLose()}`);
 	console.log(`tie: ${player.getTie()}`);
 }
+
+const playerOne = createPlayer();
+const playerTwo = createPlayer();
 
 displayPlayer(playerOne);
 displayPlayer(playerTwo);
