@@ -5,37 +5,67 @@ function createGameBoard() {
 
 	const id = crypto.randomUUID();
 	const gameBoard = ["", "", "", "", "", "", "", "", ""];
-	let gameState = "waiting"; // waiting | ongoing | win P1 | win P2 | tie
-	let player1 = null;
-	let player2 = null;
+	const winConditionArray = (() => {
+		function createWinCondition(a, b, c) {
+			return ((symbol) => {
+				if (symbol === gameBoard[a]
+					&& symbol === gameBoard[b]
+					&& symbol === gameBoard[c]) {
+					return (true);
+				}
+				return (false);
+			});
+		}
+		return ([
+			createWinCondition(0, 1, 2),
+			createWinCondition(3, 4, 5),
+			createWinCondition(6, 7, 8),
+			createWinCondition(0, 3, 6),
+			createWinCondition(1, 4, 7),
+			createWinCondition(2, 5, 8),
+			createWinCondition(0, 4, 8),
+			createWinCondition(2, 4, 6),
+		]);
+	})();
 
 	const getId = () => { return (id); };
 	const getGameBoardNumber = () => { return (gameBoardNumber); };
 	const getGameBoard = () => { return (gameBoard); };
-	const getGameState = () => { return (gameState); };
-	const getPlayer1 = () => { return (player1); };
-	const getPlayer2 = () => { return (player2); };
 	const getTile = (index) => { return (gameBoard[index]); };
 
-	const setTile = (symbol, index) => { gameBoard[index] = symbol; };
-	const setPlayer1 = (player) => { player1 = player; };
-	const setPlayer2 = (player) => { player2 = player; };
+	const setTile = (index, symbol) => { gameBoard[index] = symbol; };
+
+	const checkWin = (symbol) => {
+		for (let i = 0; i < winConditionArray.length; i++) {
+			if (winConditionArray[i](symbol)) {
+				return (true);
+			}
+		}
+		return (false);
+	};
+	const checkTie = () => {
+		for (let i = 0; i < gameBoard.length; i++) {
+			if (gameBoard[i] === "") {
+				return (false);
+			}
+		}
+		return (true);
+	};
 
 	return ({
-		getId, getGameBoardNumber,
-		getGameBoard, getGameState,
-		getPlayer1, getPlayer2,
-		setPlayer1, setPlayer2
+		getId, getGameBoardNumber, getGameBoard,
+		getTile, setTile,
+		checkWin, checkTie
 	});
 }
 
 function createPlayer() {
 	const id = crypto.randomUUID();
+	let symbol = "";
 	let name = "";
 	let win = 0;
 	let lose = 0;
 	let tie = 0;
-	let symbol = "";
 
 	const getId = () => { return (id); };
 	const getSymbol = () => { return (symbol); };
@@ -60,72 +90,65 @@ function createPlayer() {
 	});
 }
 
-/* ************************************************************************** */
-/*                                    TEST                                    */
-/* ************************************************************************** */
+function createGame(player1, player2) {
+	const gameBoard = createGameBoard();
 
-/* ******************************* PLAYER TEST ****************************** */
-function displayPlayer(player) {
-	console.log(player);
-	console.log(`id: ${player.getId()}`);
-	console.log(`symbol: ${player.getSymbol()}`);
-	console.log(`name: ${player.getName()}`);
-	console.log(`win: ${player.getWin()}`);
-	console.log(`lose: ${player.getLose()}`);
-	console.log(`tie: ${player.getTie()}`);
-}
-
-const playerOne = createPlayer();
-const playerTwo = createPlayer();
-
-displayPlayer(playerOne);
-displayPlayer(playerTwo);
-
-playerOne.setSymbol("X");
-playerOne.setName("Ouaf");
-
-displayPlayer(playerOne);
-displayPlayer(playerTwo);
-
-playerTwo.setSymbol("O");
-playerTwo.setName("Woof");
-
-displayPlayer(playerOne);
-displayPlayer(playerTwo);
-
-playerOne.incrementTie();
-playerOne.incrementTie();
-playerOne.incrementTie();
-
-displayPlayer(playerOne);
-displayPlayer(playerTwo);
-
-/* ***************************** GAMEBOARD TEST ***************************** */
-function displayGameBoard(gameBoard) {
-	console.warn(gameBoard);
-	console.log(`ID: ${gameBoard.getId()}`);
-	console.log(`GameBoardNumber: ${gameBoard.getGameBoardNumber()}`);
-	console.log(`GameBoard: ${gameBoard.getGameBoard()}`);
-	console.log(`GameState: ${gameBoard.getGameState()}`);
-	if (gameBoard.getPlayer1()) {
-		console.log(`player1: ${gameBoard.getPlayer1().getName()}`);
-	} else {
-		console.log("No player 1 yet.");
+	function endGame(player) {
+		if (player === null) {
+			player1.incrementTie();
+			player2.incrementTie();
+			return;
+		}
+		if (player.getId() === player1.getId()) {
+			player1.incrementWin();
+			player2.incrementLose();
+			return;
+		} else if (player.getId() === player2.getId()) {
+			player2.incrementWin();
+			player1.incrementLose();
+			return;
+		}
 	}
-	if (gameBoard.getPlayer2()) {
-		console.log(`player2: ${gameBoard.getPlayer2().getName()}`);
-	} else {
-		console.log("No player 2 yet.");
+
+	function playerTurn(player) {
+		const playerMove = parseInt(prompt(`play ${player.getSymbol()}, index 0-8`));
+		if (playerMove === NaN
+			|| playerMove > 8
+			|| playerMove < 0
+			|| gameBoard.getTile(playerMove) !== "") {
+			console.log("invalid, try again");
+			return (0);
+		}
+		gameBoard.setTile(playerMove, player.getSymbol());
+		return (1);
 	}
+
+	const gameLoop = () => {
+		let turnCount = 0;
+		while (turnCount < 9) {
+			if ((turnCount % 2) === 0) {
+				turnCount += playerTurn(player1);
+			} else {
+				turnCount += playerTurn(player2);
+			}
+
+			if (gameBoard.checkWin(player1.getSymbol())) {
+				return (endGame(player1));
+			}
+			if (gameBoard.checkWin(player2.getSymbol())) {
+				return (endGame(player2));
+			}
+			if (gameBoard.checkTie()) {
+				return (endGame(null));
+			}
+		}
+	};
+
+	const getGameBoard = () => { return (gameBoard); };
+	const getPlayer1 = () => { return (player1); };
+	const getPlayer2 = () => { return (player2); };
+	return ({
+		gameLoop, getGameBoard,
+		getPlayer1, getPlayer2
+	});
 }
-
-const gameBoardOne = createGameBoard();
-const gameBoardTwo = createGameBoard();
-const gameBoardThree = createGameBoard();
-
-gameBoardOne.setPlayer1(playerOne);
-gameBoardOne.setPlayer2(playerTwo);
-
-displayGameBoard(gameBoardOne);
-displayGameBoard(gameBoardTwo);
-displayGameBoard(gameBoardThree);
