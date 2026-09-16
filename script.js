@@ -1,3 +1,6 @@
+/* ************************************************************************** */
+/*                              CREATE GAMEBOARD                              */
+/* ************************************************************************** */
 let gameBoardCount = 0;
 function createGameBoard() {
 	const gameBoardNumber = gameBoardCount;
@@ -59,6 +62,9 @@ function createGameBoard() {
 	});
 }
 
+/* ************************************************************************** */
+/*                                CREATE PLAYER                               */
+/* ************************************************************************** */
 function createPlayer() {
 	const id = crypto.randomUUID();
 	let symbol = "";
@@ -90,6 +96,9 @@ function createPlayer() {
 	});
 }
 
+/* ************************************************************************** */
+/*                                 CREATE GAME                                */
+/* ************************************************************************** */
 function createGame(player1, player2) {
 	const gameBoard = createGameBoard();
 
@@ -131,7 +140,7 @@ function createGame(player1, player2) {
 			} else {
 				turnCount += playerTurn(player2);
 			}
-
+			console.log(gameBoard.getGameBoard());
 			if (gameBoard.checkWin(player1.getSymbol())) {
 				return (endGame(player1));
 			}
@@ -152,3 +161,7 @@ function createGame(player1, player2) {
 		getPlayer1, getPlayer2
 	});
 }
+
+/* ************************************************************************** */
+/*                                  RENDERING                                 */
+/* ************************************************************************** */

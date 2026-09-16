@@ -60,7 +60,7 @@ function displayGame(game) {
 const game1 = createGame(playerOne, playerTwo);
 displayGame(game1);
 displayGameBoard(game1.getGameBoard());
-game1.gameLoop();
+// game1.gameLoop();
 displayGameBoard(game1.getGameBoard());
 displayPlayer(playerOne);
 displayPlayer(playerTwo);
