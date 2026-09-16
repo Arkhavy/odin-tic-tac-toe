@@ -1,0 +1,40 @@
+body {
+	display: flex;
+	height: 100vh;
+}
+
+main {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width: 80%;
+
+	border: 1px solid blue;
+}
+
+aside {
+	width: 20%;
+
+	border: 1px solid red;
+}
+
+div {
+	border: 1px solid black;
+}
+
+.gameContainer {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	justify-items: center;
+	align-content: center;
+	width: 50vh;
+	height: 50vh;
+}
+
+
+.gameTile {
+	border: 1px solid green;
+	width: 100%;
+}
