@@ -165,3 +165,83 @@ function createGame(player1, player2) {
 /* ************************************************************************** */
 /*                                  RENDERING                                 */
 /* ************************************************************************** */
+const gameBoardElement = document.getElementById("gameContainer");
+const gameTileElementArray = document.getElementsByClassName("gameTile");
+const startGameButtonElement = document.getElementById("startGameButton");
+const historyElement = document.getElementById("history");
+
+/* ************************************************************************** */
+/*                               PLAYER CREATION                              */
+/* ************************************************************************** */
+const createPlayerFormElement = document.getElementById("createPlayerForm");
+const createPlayerButtonElement = document.getElementById("createPlayerButton");
+const playerArray = [];
+
+function createForm() {
+	const newForm = document.createElement("form");
+	newForm.name = `createPlayerForm`;
+	newForm.action = "";
+	newForm.method = "POST";
+
+	function createLabel(text, id) {
+		const label = document.createElement("label");
+		label.textContent = text;
+		label.htmlFor = id;
+		label.className = "formItem";
+		return (label);
+	}
+
+	function createInput(id, type) {
+		const input = document.createElement("input");
+		input.name = id;
+		input.id = id;
+		input.type = type;
+		input.required = true;
+		input.minLength = 1;
+		if (id === "symbol") {
+			input.autocapitalize = true;
+			input.maxLength = 1;
+		}
+		input.className = "formItem";
+		return (input);
+	}
+
+	function createButton(text, type) {
+		const button = document.createElement("button");
+		button.textContent = text;
+		button.type = type;
+		button.className = "formItem";
+		return (button);
+	}
+
+	/* ******************************* PLAYER NAME ****************************** */
+	newForm.appendChild(createLabel("Player name:", "name"));
+	newForm.appendChild(createInput("name", "text"));
+
+	/* ****************************** PLAYER SYMBOL ***************************** */
+	newForm.appendChild(createLabel("Player symbol:", "symbol"));
+	newForm.appendChild(createInput("symbol", "text"));
+
+	newForm.appendChild(createButton("Submit", "submit"));
+
+	newForm.addEventListener("submit", (e) => {
+		let formData = new FormData(newForm);
+		let output = [];
+
+		for (const [key, value] of formData) {
+			output.push(value);
+		}
+		const newPlayer = createPlayer();
+		newPlayer.setName(output[0]);
+		newPlayer.setSymbol(output[1]);
+		playerArray.push(newPlayer);
+		createPlayerFormElement.removeChild(newForm);
+		e.preventDefault();
+	});
+
+	return (newForm);
+}
+
+createPlayerButtonElement.addEventListener("click", () => {
+	createPlayerFormElement.appendChild(createForm());
+});
