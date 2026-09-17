@@ -23,7 +23,7 @@ div {
 	border: 1px solid black;
 }
 
-.gameContainer {
+#gameContainer {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-template-rows: repeat(3, 1fr);
