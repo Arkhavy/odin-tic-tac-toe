@@ -11,10 +11,10 @@
 
 <body>
 	<aside>
-		<ol></ol>
+		<ol id="history"></ol>
 	</aside>
 	<main>
-		<div class="gameContainer">
+		<div id="gameContainer">
 			<div class="gameTile"></div>
 			<div class="gameTile"></div>
 			<div class="gameTile"></div>
@@ -26,12 +26,14 @@
 			<div class="gameTile"></div>
 		</div>
 		<div class="buttonContainer">
-			<button>Start</button>
-			<button>Create player</button>
+			<button type="button" id="startGameButton">Start game</button>
+		</div>
+		<div id="createPlayerForm">
+			<button type="button" id="createPlayerButton">Create player</button>
 		</div>
 	</main>
 	<script src="script.js"></script>
-	<script src="tests.js"></script>
+	<!-- <script src="tests.js"></script> -->
 </body>
 
 </html>
