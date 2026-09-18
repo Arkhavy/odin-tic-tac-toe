@@ -167,7 +167,6 @@ function createGame(player1, player2) {
 /* ************************************************************************** */
 const gameBoardElement = document.getElementById("gameContainer");
 const gameTileElementArray = document.getElementsByClassName("gameTile");
-const startGameButtonElement = document.getElementById("startGameButton");
 const historyElement = document.getElementById("history");
 
 /* ************************************************************************** */
@@ -175,6 +174,8 @@ const historyElement = document.getElementById("history");
 /* ************************************************************************** */
 const createPlayerFormElement = document.getElementById("createPlayerForm");
 const createPlayerButtonElement = document.getElementById("createPlayerButton");
+const player1SelectElement = document.getElementById("player1Select");
+const player2SelectElement = document.getElementById("player2Select");
 const playerArray = [];
 
 function createForm() {
@@ -214,6 +215,13 @@ function createForm() {
 		return (button);
 	}
 
+	function updatePlayerSelection(selectElement, newPlayer) {
+		const newOption = document.createElement("option");
+		newOption.value = newPlayer.getId();
+		newOption.textContent = newPlayer.getName();
+		selectElement.appendChild(newOption);
+	}
+
 	/* ******************************* PLAYER NAME ****************************** */
 	newForm.appendChild(createLabel("Player name:", "name"));
 	newForm.appendChild(createInput("name", "text"));
@@ -236,6 +244,8 @@ function createForm() {
 		newPlayer.setSymbol(output[1]);
 		playerArray.push(newPlayer);
 		createPlayerFormElement.removeChild(newForm);
+		updatePlayerSelection(player1SelectElement, newPlayer);
+		updatePlayerSelection(player2SelectElement, newPlayer);
 		e.preventDefault();
 	});
 
@@ -244,4 +254,29 @@ function createForm() {
 
 createPlayerButtonElement.addEventListener("click", () => {
 	createPlayerFormElement.appendChild(createForm());
+});
+
+/* ************************************************************************** */
+/*                                 START GAME                                 */
+/* ************************************************************************** */
+const startGameButtonElement = document.getElementById("startGameButton");
+
+startGameButtonElement.addEventListener("click", () => {
+	function getPlayerFromId(playerId) {
+		for (let i = 0; playerArray.length; i++) {
+			if (playerArray[i].getId() === playerId) {
+				return (playerArray[i]);
+			}
+		}
+	}
+
+	if (player1SelectElement.value === player2SelectElement.value) {
+		console.warn("Player cannot play against himself");
+		return;
+	}
+
+	const player1 = getPlayerFromId(player1SelectElement.value);
+	const player2 = getPlayerFromId(player2SelectElement.value);
+	const game = createGame(player1, player2);
+	game.gameLoop();
 });
