@@ -96,6 +96,14 @@ function createPlayer() {
 	});
 }
 
+function getPlayerFromId(playerId) {
+	for (let i = 0; playerArray.length; i++) {
+		if (playerArray[i].getId() === playerId) {
+			return (playerArray[i]);
+		}
+	}
+}
+
 /* ************************************************************************** */
 /*                                 CREATE GAME                                */
 /* ************************************************************************** */
@@ -106,16 +114,16 @@ function createGame(player1, player2) {
 		if (player === null) {
 			player1.incrementTie();
 			player2.incrementTie();
-			return;
+			return (0);
 		}
 		if (player.getId() === player1.getId()) {
 			player1.incrementWin();
 			player2.incrementLose();
-			return;
+			return (1);
 		} else if (player.getId() === player2.getId()) {
 			player2.incrementWin();
 			player1.incrementLose();
-			return;
+			return (2);
 		}
 	}
 
@@ -163,11 +171,64 @@ function createGame(player1, player2) {
 }
 
 /* ************************************************************************** */
-/*                                  RENDERING                                 */
+/*                                GAME DISPLAY                                */
 /* ************************************************************************** */
 const gameBoardElement = document.getElementById("gameContainer");
 const gameTileElementArray = document.getElementsByClassName("gameTile");
+
+/* ************************************************************************** */
+/*                               HISTORY DISPLAY                              */
+/* ************************************************************************** */
 const historyElement = document.getElementById("history");
+
+function updateHistory(game, gameResult) {
+	const newListItem = document.createElement("li");
+	const gameResultParagraph = document.createElement("p");
+	const gameBoardNumber = game.getGameBoard().getGameBoardNumber();
+	const player1StatsParagraph = document.createElement("p");
+	const player2StatsParagraph = document.createElement("p");
+	switch (gameResult) {
+		case 0:
+			gameResultParagraph.textContent = `Game ${gameBoardNumber}: TIE`; break;
+		case 1:
+			gameResultParagraph.textContent = `Game ${gameBoardNumber}: PLAYER 1 WIN`; break;
+		case 2:
+			gameResultParagraph.textContent = `Game ${gameBoardNumber}: PLAYER 2 WIN`; break;
+	}
+	player1StatsParagraph.textContent = `PLAYER 1: ${game.getPlayer1().getName()}`;
+	player2StatsParagraph.textContent = `PLAYER 2: ${game.getPlayer2().getName()}`;
+	newListItem.appendChild(gameResultParagraph);
+	newListItem.appendChild(player1StatsParagraph);
+	newListItem.appendChild(player2StatsParagraph);
+	historyElement.appendChild(newListItem);
+}
+
+/* ************************************************************************** */
+/*                               PLAYER DISPLAY                               */
+/* ************************************************************************** */
+const playerListElement = document.getElementById("playerList");
+
+function updatePlayerList() {
+	while (playerListElement.firstChild) {
+		playerListElement.removeChild(playerListElement.firstChild);
+	}
+	for (let i = 0; i < playerArray.length; i++) {
+		const newListItem = document.createElement("li");
+		const playerStats = [
+			`Symbol: ${playerArray[i].getSymbol()}`,
+			`Name: ${playerArray[i].getName()}`,
+			`Win: ${playerArray[i].getWin()}`,
+			`Lose: ${playerArray[i].getLose()}`,
+			`Tie: ${playerArray[i].getTie()}`
+		];
+		playerStats.forEach((stat) => {
+			const paragraph = document.createElement("p");
+			paragraph.textContent = stat;
+			newListItem.appendChild(paragraph);
+		});
+		playerListElement.appendChild(newListItem);
+	}
+}
 
 /* ************************************************************************** */
 /*                               PLAYER CREATION                              */
@@ -246,6 +307,7 @@ function createForm() {
 		createPlayerFormElement.removeChild(newForm);
 		updatePlayerSelection(player1SelectElement, newPlayer);
 		updatePlayerSelection(player2SelectElement, newPlayer);
+		updatePlayerList();
 		e.preventDefault();
 	});
 
@@ -262,14 +324,6 @@ createPlayerButtonElement.addEventListener("click", () => {
 const startGameButtonElement = document.getElementById("startGameButton");
 
 startGameButtonElement.addEventListener("click", () => {
-	function getPlayerFromId(playerId) {
-		for (let i = 0; playerArray.length; i++) {
-			if (playerArray[i].getId() === playerId) {
-				return (playerArray[i]);
-			}
-		}
-	}
-
 	if (player1SelectElement.value === player2SelectElement.value) {
 		console.warn("Player cannot play against himself");
 		return;
@@ -278,5 +332,7 @@ startGameButtonElement.addEventListener("click", () => {
 	const player1 = getPlayerFromId(player1SelectElement.value);
 	const player2 = getPlayerFromId(player2SelectElement.value);
 	const game = createGame(player1, player2);
-	game.gameLoop();
+	const gameResult = game.gameLoop();
+	updateHistory(game, gameResult);
+	updatePlayerList();
 });
