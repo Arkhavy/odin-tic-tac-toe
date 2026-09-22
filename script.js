@@ -183,6 +183,7 @@ const historyElement = document.getElementById("history");
 
 function updateHistory(game, gameResult) {
 	const newListItem = document.createElement("li");
+	newListItem.className = "historyCard";
 	const gameResultParagraph = document.createElement("p");
 	const gameBoardNumber = game.getGameBoard().getGameBoardNumber();
 	const player1StatsParagraph = document.createElement("p");
@@ -214,6 +215,7 @@ function updatePlayerList() {
 	}
 	for (let i = 0; i < playerArray.length; i++) {
 		const newListItem = document.createElement("li");
+		newListItem.className = "playerCard";
 		const playerStats = [
 			`Symbol: ${playerArray[i].getSymbol()}`,
 			`Name: ${playerArray[i].getName()}`,
