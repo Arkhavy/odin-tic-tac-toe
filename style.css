@@ -1,6 +1,21 @@
+* {
+	--light-sea-green: #20A39E;
+	--sunflower-gold: #FFBA49;
+	--midnight-violet: #190B28;
+	--periwinkle: #B2ABF2;
+	--periwinkle-clear: #B2ABF288;
+	--dusty-grape: #665B8D;
+	--dusty-grape-clear: #665B8D88;
+	--steel-blue: #69A7C8;
+	--steel-blue-clear: #69A7C888;
+	--pacific-blue: #45A5B3;
+	--pacific-blue-clear: #45A5B388;
+}
+
 body {
 	display: flex;
 	height: 100vh;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 main {
@@ -13,12 +28,64 @@ main {
 	border: 1px solid blue;
 }
 
+/* ************************************************************************** */
+/*                                ASIDE DISPLAY                               */
+/* ************************************************************************** */
 aside {
-	width: 20%;
+	display: grid;
+	grid-template-columns: 8fr 9fr;
+	width: 50vw;
 
 	border: 1px solid red;
 }
 
+ol {
+	margin-right: 10px;
+	border-right: 0.5ch solid black;
+	border-radius: 2ch;
+	overflow-y: scroll;
+}
+
+/* ***************************** HISTORY DISPLAY **************************** */
+.historyCard:nth-child(even) {
+	border-color: var(--periwinkle);
+	background-color: var(--periwinkle-clear);
+}
+
+.historyCard:nth-child(odd) {
+	border-color: var(--dusty-grape);
+	background-color: var(--dusty-grape-clear);
+}
+
+.historyCard,
+.playerCard {
+	border: 1ch solid;
+	padding: 1ch;
+	margin: 1ch;
+	border-radius: 2ch;
+	line-height: 1.2em;
+}
+
+/* ***************************** PLAYER DISPLAY ***************************** */
+.playerCard:nth-child(even) {
+	border-color: var(--steel-blue);
+	background-color: var(--steel-blue-clear);
+}
+
+.playerCard:nth-child(odd) {
+	border-color: var(--pacific-blue);
+	background-color: var(--pacific-blue-clear);
+}
+
+.playerCard {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 0.5ch;
+}
+
+/* ************************************************************************** */
+/*                                MAIN DISPLAY                                */
+/* ************************************************************************** */
 div {
 	border: 1px solid black;
 }
@@ -32,7 +99,6 @@ div {
 	width: 50vh;
 	height: 50vh;
 }
-
 
 .gameTile {
 	border: 1px solid green;
