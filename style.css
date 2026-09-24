@@ -1,15 +1,12 @@
 * {
 	--light-sea-green: #20A39E;
+	--light-sea-green-clear: #20A39E88;
+
 	--sunflower-gold: #FFBA49;
-	--midnight-violet: #190B28;
-	--periwinkle: #B2ABF2;
-	--periwinkle-clear: #B2ABF288;
-	--dusty-grape: #665B8D;
-	--dusty-grape-clear: #665B8D88;
-	--steel-blue: #69A7C8;
-	--steel-blue-clear: #69A7C888;
-	--pacific-blue: #45A5B3;
-	--pacific-blue-clear: #45A5B388;
+	--sunflower-gold-clear: #FFBA4988;
+	
+	--rebecca-purple: #642CA0;
+	--rebecca-purple-clear: #642CA088;
 }
 
 body {
@@ -18,25 +15,20 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-main {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	width: 80%;
-
-	border: 1px solid blue;
-}
-
 /* ************************************************************************** */
 /*                                ASIDE DISPLAY                               */
 /* ************************************************************************** */
 aside {
 	display: grid;
 	grid-template-columns: 8fr 9fr;
+	grid-template-rows: 2ch;
 	width: 50vw;
+	padding-top: 1ch;
+}
 
-	border: 1px solid red;
+h3 {
+	justify-self: center;
+	align-self: center;
 }
 
 ol {
@@ -47,16 +39,6 @@ ol {
 }
 
 /* ***************************** HISTORY DISPLAY **************************** */
-.historyCard:nth-child(even) {
-	border-color: var(--periwinkle);
-	background-color: var(--periwinkle-clear);
-}
-
-.historyCard:nth-child(odd) {
-	border-color: var(--dusty-grape);
-	background-color: var(--dusty-grape-clear);
-}
-
 .historyCard,
 .playerCard {
 	border: 1ch solid;
@@ -64,30 +46,41 @@ ol {
 	margin: 1ch;
 	border-radius: 2ch;
 	line-height: 1.2em;
+	box-shadow: 5px 5px 10px lightgrey;
+	overflow-x: auto;
 }
 
 /* ***************************** PLAYER DISPLAY ***************************** */
-.playerCard:nth-child(even) {
-	border-color: var(--steel-blue);
-	background-color: var(--steel-blue-clear);
+.playerCard:nth-child(odd) {
+	border-color: var(--light-sea-green);
+	background-color: var(--light-sea-green-clear);
 }
 
-.playerCard:nth-child(odd) {
-	border-color: var(--pacific-blue);
-	background-color: var(--pacific-blue-clear);
+.playerCard:nth-child(even) {
+	border-color: var(--sunflower-gold);
+	background-color: var(--sunflower-gold-clear);
 }
 
 .playerCard {
 	display: grid;
-	grid-template-columns: 1fr 2fr;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr;
 	gap: 0.5ch;
+}
+
+.playerCard p:first-child {
+	grid-column: 1 / 4;
 }
 
 /* ************************************************************************** */
 /*                                MAIN DISPLAY                                */
 /* ************************************************************************** */
-div {
-	border: 1px solid black;
+main {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width: 80%;
 }
 
 #gameContainer {
