@@ -186,8 +186,8 @@ function updateHistory(game, gameResult) {
 	newListItem.className = "historyCard";
 	const gameResultParagraph = document.createElement("p");
 	const gameBoardNumber = game.getGameBoard().getGameBoardNumber();
-	const player1StatsParagraph = document.createElement("p");
-	const player2StatsParagraph = document.createElement("p");
+	const p1NameParagraph = document.createElement("p");
+	const p2NameParagraph = document.createElement("p");
 	switch (gameResult) {
 		case 0:
 			gameResultParagraph.textContent = `Game ${gameBoardNumber}: TIE`; break;
@@ -196,11 +196,11 @@ function updateHistory(game, gameResult) {
 		case 2:
 			gameResultParagraph.textContent = `Game ${gameBoardNumber}: PLAYER 2 WIN`; break;
 	}
-	player1StatsParagraph.textContent = `PLAYER 1: ${game.getPlayer1().getName()}`;
-	player2StatsParagraph.textContent = `PLAYER 2: ${game.getPlayer2().getName()}`;
+	p1NameParagraph.textContent = `PLAYER 1: ${game.getPlayer1().getName()}`;
+	p2NameParagraph.textContent = `PLAYER 2: ${game.getPlayer2().getName()}`;
 	newListItem.appendChild(gameResultParagraph);
-	newListItem.appendChild(player1StatsParagraph);
-	newListItem.appendChild(player2StatsParagraph);
+	newListItem.appendChild(p1NameParagraph);
+	newListItem.appendChild(p2NameParagraph);
 	historyElement.appendChild(newListItem);
 }
 
@@ -217,7 +217,6 @@ function updatePlayerList() {
 		const newListItem = document.createElement("li");
 		newListItem.className = "playerCard";
 		const playerStats = [
-			`Symbol: ${playerArray[i].getSymbol()}`,
 			`Name: ${playerArray[i].getName()}`,
 			`Win: ${playerArray[i].getWin()}`,
 			`Lose: ${playerArray[i].getLose()}`,
@@ -262,10 +261,6 @@ function createForm() {
 		input.type = type;
 		input.required = true;
 		input.minLength = 1;
-		if (id === "symbol") {
-			input.autocapitalize = true;
-			input.maxLength = 1;
-		}
 		input.className = "formItem";
 		return (input);
 	}
@@ -285,26 +280,16 @@ function createForm() {
 		selectElement.appendChild(newOption);
 	}
 
-	/* ******************************* PLAYER NAME ****************************** */
-	newForm.appendChild(createLabel("Player name:", "name"));
-	newForm.appendChild(createInput("name", "text"));
-
-	/* ****************************** PLAYER SYMBOL ***************************** */
-	newForm.appendChild(createLabel("Player symbol:", "symbol"));
-	newForm.appendChild(createInput("symbol", "text"));
+	newForm.appendChild(createLabel("Player name:", "playerName"));
+	newForm.appendChild(createInput("playerName", "text"));
 
 	newForm.appendChild(createButton("Submit", "submit"));
 
 	newForm.addEventListener("submit", (e) => {
 		let formData = new FormData(newForm);
-		let output = [];
-
-		for (const [key, value] of formData) {
-			output.push(value);
-		}
 		const newPlayer = createPlayer();
-		newPlayer.setName(output[0]);
-		newPlayer.setSymbol(output[1]);
+
+		newPlayer.setName(formData.get("playerName"));
 		playerArray.push(newPlayer);
 		createPlayerFormElement.removeChild(newForm);
 		updatePlayerSelection(player1SelectElement, newPlayer);
@@ -333,6 +318,8 @@ startGameButtonElement.addEventListener("click", () => {
 
 	const player1 = getPlayerFromId(player1SelectElement.value);
 	const player2 = getPlayerFromId(player2SelectElement.value);
+	player1.setSymbol("X");
+	player2.setSymbol("O");
 	const game = createGame(player1, player2);
 	const gameResult = game.gameLoop();
 	updateHistory(game, gameResult);
