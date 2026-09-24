@@ -184,23 +184,31 @@ const historyElement = document.getElementById("history");
 function updateHistory(game, gameResult) {
 	const newListItem = document.createElement("li");
 	newListItem.className = "historyCard";
-	const gameResultParagraph = document.createElement("p");
-	const gameBoardNumber = game.getGameBoard().getGameBoardNumber();
-	const p1NameParagraph = document.createElement("p");
-	const p2NameParagraph = document.createElement("p");
+	const gameData = [
+		`Game ${game.getGameBoard().getGameBoardNumber()}: `,
+		`PLAYER 1: ${game.getPlayer1().getName()}`,
+		`PLAYER 2: ${game.getPlayer2().getName()}`
+	];
+
+	function updateGameStatus(status, color) {
+		gameData[0] += status;
+		newListItem.style.borderColor = `var(--${color})`;
+		newListItem.style.backgroundColor = `var(--${color}-clear)`;
+	}
+
 	switch (gameResult) {
 		case 0:
-			gameResultParagraph.textContent = `Game ${gameBoardNumber}: TIE`; break;
+			updateGameStatus("TIE", "rebecca-purple"); break;
 		case 1:
-			gameResultParagraph.textContent = `Game ${gameBoardNumber}: PLAYER 1 WIN`; break;
+			updateGameStatus("PLAYER 1 WIN", "light-sea-green"); break;
 		case 2:
-			gameResultParagraph.textContent = `Game ${gameBoardNumber}: PLAYER 2 WIN`; break;
+			updateGameStatus("PLAYER 2 WIN", "sunflower-gold"); break;
 	}
-	p1NameParagraph.textContent = `PLAYER 1: ${game.getPlayer1().getName()}`;
-	p2NameParagraph.textContent = `PLAYER 2: ${game.getPlayer2().getName()}`;
-	newListItem.appendChild(gameResultParagraph);
-	newListItem.appendChild(p1NameParagraph);
-	newListItem.appendChild(p2NameParagraph);
+	gameData.forEach((data) => {
+		const paragraph = document.createElement("p");
+		paragraph.textContent = data;
+		newListItem.appendChild(paragraph);
+	})
 	historyElement.appendChild(newListItem);
 }
 
